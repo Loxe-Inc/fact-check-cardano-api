@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  neo4j:
+    image: neo4j:latest
+  api:
+    image: loxeinc/fact-check-api
+    build: .
+    depends_on:
+      - neo4j
+    volumes:
+      - ./src:/fact-check/src
