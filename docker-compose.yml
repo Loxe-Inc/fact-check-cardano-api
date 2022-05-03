@@ -3,6 +3,11 @@ version: "3.9"
 services:
   neo4j:
     image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    env_file:
+      - ./.env
   api:
     image: loxeinc/fact-check-api
     build: .
@@ -10,3 +15,10 @@ services:
       - neo4j
     volumes:
       - ./src:/fact-check/src
+    ports:
+      - "4000:4000"
+    command:
+      - "npm"
+      - "start"
+    env_file:
+      - ./.env

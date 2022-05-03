@@ -4,5 +4,7 @@
  * import Refresh from "./Refresh"
  * export default {Login}
  */
+import Login from "./Login";
+import CreateUser from "./CreateUser";
 
-export default {}
+export const resolvers = { Mutation: { Login, CreateUser } };

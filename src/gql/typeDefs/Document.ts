@@ -16,10 +16,10 @@ export default gql`
     id: ID! @id
     text: String!
     url: String!
-    topic: Topic
-    verified: boolean!
+    topic: Topic!
+    verified: Boolean!
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
-    deleted: boolean!
+    deleted: Boolean!
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
     createdOn: DateTime!
     updatedOn: DateTime!
