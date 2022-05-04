@@ -24,7 +24,7 @@ export default gql`
     id: ID! @id
     name: String!
     password: String!
-    email: String!
+    email: String! @unique
     roles: [String!]!
   }
 `;

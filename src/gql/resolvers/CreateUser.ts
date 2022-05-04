@@ -53,15 +53,19 @@ export default async function Login(
       // user exists
       throw new UserAlreadyExists("User already exists");
     } else {
-      const passwordHash = argon2.hash(password);
+      const passwordHash = await argon2.hash(password);
       const roles = ["info_reader"];
       const emailEnding = userEmail.split("@")[1];
-      const create = `OPTIONAL MATCH (o:Org) 
-      WHERE $emailEnding IN o.emailEndings 
-      WITH o, CALL apoc.do.when(o IS NULL, 'CREATE (u:User {email:$email, password: $password, roles: $roles, name: $name, id: apoc.create.uuid()}) RETURN u',
-                        'CREATE (o)<-[:MEMBER_OF]-(u:User {email:$email, password: $password, roles: $roles, name: $name, id: apoc.create.uuid()}) RETURN u'
-                        , {email:$email, password: $password, roles: $roles, name: $name, o: o}) YIELD u
-      RETURN u
+      console.log(userEmail, password, roles, typeof name, emailEnding);
+      const create = ` 
+        OPTIONAL MATCH (o:Org) WHERE any(ending IN o.emailEndings WHERE ending = $emailEnding)
+        WITH o CALL apoc.do.when(
+          o IS NOT NULL,
+          'CREATE (org)<-[:MEMBER_OF]-(u:User {email:email, password:password, roles:roles, name:name, id:apoc.create.uuid()}) RETURN u as node',
+          'CREATE (u:User {email:email, password:password, roles:roles, name:$name, id:apoc.create.uuid()}) RETURN u as node',
+          {email:$email, password:$password, roles:$roles, name:$name}
+        ) YIELD value
+        RETURN value.node as user
       `;
       const createResult = await session.run(create, {
         email: userEmail,
@@ -71,7 +75,7 @@ export default async function Login(
         emailEnding,
       });
       if (createResult?.records?.length) {
-        const userProperties = createResult.records[0].get("u")
+        const userProperties = createResult.records[0].get("user")
           ?.properties as UserProperties;
         if (!userProperties) {
           throw new UserNotFoundError(`toast:User could not be created`);
