@@ -65,7 +65,7 @@ export default async function Login(
           'CREATE (u:User {email:email, password:password, roles:roles, name:$name, id:apoc.create.uuid()}) RETURN u as node',
           {email:$email, password:$password, roles:$roles, name:$name}
         ) YIELD value
-        RETURN value.node as user
+        RETURN value.node AS user
       `;
       const createResult = await session.run(create, {
         email: userEmail,

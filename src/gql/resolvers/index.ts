@@ -6,5 +6,9 @@
  */
 import Login from "./Login";
 import CreateUser from "./CreateUser";
+import RefreshToken from "./RefreshToken";
+import CreateDocuments from "./CreateDocuments";
 
-export const resolvers = { Mutation: { Login, CreateUser } };
+export const resolvers = {
+  Mutation: { Login, CreateUser, RefreshToken, CreateDocuments },
+};

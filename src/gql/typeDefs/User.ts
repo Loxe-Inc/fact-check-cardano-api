@@ -4,6 +4,7 @@ export default gql`
   type Mutation {
     Login(email: String!, password: String!): UserLogin!
     CreateUser(email: String!, password: String!, name: String!): UserLogin!
+    RefreshToken(refresh_token: String!): UserLogin!
   }
   type TokenSet {
     access_token: String!

@@ -4,7 +4,7 @@ export default gql`
   type Topic {
     id: ID! @id
     name: String!
-    category: String!
-    subCategory: String!
+    category: String
+    subCategory: String
   }
 `;

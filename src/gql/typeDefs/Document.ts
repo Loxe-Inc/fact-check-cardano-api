@@ -1,6 +1,17 @@
 import { gql } from "apollo-server";
 
 export default gql`
+  input DocumentInput {
+    title: String!
+    text: String!
+    url: String!
+    topic: String!
+  }
+
+  type Mutation {
+    CreateDocuments(inputs: [DocumentInput!]!): Document
+  }
+
   type Document
     @auth(
       rules: [
@@ -14,6 +25,7 @@ export default gql`
       ]
     ) {
     id: ID! @id
+    title: String!
     text: String!
     url: String!
     topic: Topic!
