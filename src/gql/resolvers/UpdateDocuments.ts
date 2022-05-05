@@ -1,4 +1,3 @@
-import { Context } from "@neo4j/graphql/dist/types";
 import { DateTime, Driver } from "neo4j-driver";
 import * as yup from "yup";
 
@@ -7,6 +6,7 @@ interface DocumentInput {
   text: string;
   url: string;
   topic: string;
+  id: string;
 }
 
 interface DocumentInputs {
@@ -22,39 +22,38 @@ const DocumentInputsSchema = yup.object({
           url: yup.string().url().required(),
           topic: yup.string().required(),
           title: yup.string().required(),
+          id: yup.string().required(),
         })
         .required()
     )
     .required(),
 });
 
-export default async function CreateDocuments(
+export default async function UpdateDocuments(
   _s: undefined,
   args: DocumentInputs,
-  context: Context
+  context: {
+    driver: Driver;
+  }
 ): Promise<
   {
-    id: string;
     title: string;
     text: string;
     url: string;
     createdOn: DateTime;
     updatedOn: DateTime;
+    id: string;
   }[]
 > {
   try {
     const { inputs } = await DocumentInputsSchema.validate(args);
-    console.log(context);
     const createDocumentCypher = `
         UNWIND $inputs AS input
-        OPTIONAL MATCH (t: Topic {name: input.topic})
-        WITH t, input CALL apoc.do.when(
-          t IS NULL, 'CREATE (nt: Topic {name: topic, id: apoc.create.uuid()})<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE}) RETURN d AS node', 
-          'CREATE (t)<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE}) RETURN d AS node',
-          {topic: input.topic, title: input.title, text: input.text, url: input.url, t:t}
-        ) YIELD value 
-        RETURN value.node AS doc
+        MATCH (d: Document {id: input.id})
+        SET d.updatedOn = DateTime(), d.title = input.title, d.text = input.text, d.url = input.url
+        RETURN d AS doc
       `;
+
     const { driver } = context;
     const session = driver.session();
     const result = await session.run(createDocumentCypher, { inputs });
@@ -65,10 +64,10 @@ export default async function CreateDocuments(
           return properties;
         })
         .filter((e) => e);
-      console.log(docsToReturn[0].title);
+      console.log(docsToReturn);
       return docsToReturn;
     }
-    throw new Error("No document created");
+    throw new Error("Couldn't update document");
   } catch (err) {
     console.error(err);
     throw err;

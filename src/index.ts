@@ -16,9 +16,8 @@ const neoSchema = new Neo4jGraphQL({
   driver: neoDriver,
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: RSA_KEY_B64
-        ? Buffer.from(RSA_KEY_B64, "base64").toString("ascii")
-        : "super-secret",
+      secret: "super-secret",
+      rolesPath: "https://loxeinc\\.com/roles",
     }),
   },
 });

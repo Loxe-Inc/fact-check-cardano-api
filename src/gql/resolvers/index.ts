@@ -8,7 +8,14 @@ import Login from "./Login";
 import CreateUser from "./CreateUser";
 import RefreshToken from "./RefreshToken";
 import CreateDocuments from "./CreateDocuments";
+import UpdateDocuments from "./UpdateDocuments";
 
 export const resolvers = {
-  Mutation: { Login, CreateUser, RefreshToken, CreateDocuments },
+  Mutation: {
+    Login,
+    CreateUser,
+    RefreshToken,
+    CreateDocuments,
+    UpdateDocuments,
+  },
 };

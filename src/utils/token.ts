@@ -46,10 +46,14 @@ export function generateJWT(userProperties: UserProperties): JWTSet {
   const { email, roles } = userProperties;
   const now = DateTime.utc();
   try {
-    const access_token = jwt.sign({ email, roles }, DECODED_PRV, {
-      algorithm: Method,
-      expiresIn: "30m",
-    });
+    const access_token = jwt.sign(
+      { sub: email, "https://loxeinc.com/roles": roles },
+      DECODED_PRV,
+      {
+        algorithm: Method,
+        expiresIn: "30m",
+      }
+    );
     const refresh_token = jwt.sign({ email }, DECODED_PRV, {
       algorithm: Method,
       expiresIn: "1day",

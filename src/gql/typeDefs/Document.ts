@@ -6,10 +6,12 @@ export default gql`
     text: String!
     url: String!
     topic: String!
+    id: String
   }
 
   type Mutation {
     CreateDocuments(inputs: [DocumentInput!]!): Document
+    UpdateDocuments(inputs: [DocumentInput!]!): Document
   }
 
   type Document
