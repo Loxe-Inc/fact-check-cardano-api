@@ -17,17 +17,21 @@ const neoSchema = new Neo4jGraphQL({
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
       secret: "super-secret",
-      rolesPath: "https://loxeinc\\.com/roles",
+      rolesPath: "https://loxeinc\\.com/claims.https://loxeinc\\.com/roles",
+      noVerify: false,
     }),
+  },
+  config: {
+    enableDebug: true,
   },
 });
 
 (async function main() {
   const schema = await neoSchema.getSchema();
-
   const server = new ApolloServer({
     schema,
     context: ({ req }) => ({ req }),
+    debug: true,
   });
 
   await server.listen(4000);

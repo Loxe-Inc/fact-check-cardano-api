@@ -10,7 +10,7 @@ const DECODED_PRV = RSA_KEY_B64
   ? Buffer.from(RSA_KEY_B64, "base64").toString("ascii")
   : "super-secret";
 
-const Method = RSA_KEY_B64 ? "RS384" : "HS384";
+const Method = RSA_KEY_B64 ? "RS256" : "HS256";
 
 export const generateJWTFromRT = async (
   refresh_token: string,
@@ -47,7 +47,10 @@ export function generateJWT(userProperties: UserProperties): JWTSet {
   const now = DateTime.utc();
   try {
     const access_token = jwt.sign(
-      { sub: email, "https://loxeinc.com/roles": roles },
+      {
+        sub: email,
+        "https://loxeinc.com/claims": { "https://loxeinc.com/roles": roles },
+      },
       DECODED_PRV,
       {
         algorithm: Method,
