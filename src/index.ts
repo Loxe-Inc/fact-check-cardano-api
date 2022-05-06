@@ -29,6 +29,7 @@ const neoSchema = new Neo4jGraphQL({
 
 (async function main() {
   const schema = await neoSchema.getSchema();
+  await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
   const server = new ApolloServer({
     schema,
     context: ({ req }) => ({ req }),

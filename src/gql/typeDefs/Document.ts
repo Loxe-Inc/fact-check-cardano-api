@@ -1,17 +1,23 @@
 import { gql } from "apollo-server";
 
 export default gql`
-  input DocumentInput {
+  input DocumentCreateInput {
     title: String!
     text: String!
     url: String!
-    topic: String
+    topic: [String!]!
+  }
+
+  input DocumentUpdateInput {
+    title: String!
+    text: String!
+    url: String!
     id: String
   }
 
   type Mutation {
-    CreateDocuments(inputs: [DocumentInput!]!): [Document!]!
-    UpdateDocuments(inputs: [DocumentInput!]!): [Document!]!
+    CreateDocuments(inputs: [DocumentCreateInput!]!): [Document!]!
+    UpdateDocuments(inputs: [DocumentUpdateInput!]!): [Document!]!
   }
 
   type Document
@@ -36,7 +42,7 @@ export default gql`
     title: String!
     text: String!
     url: String!
-    topic: Topic!
+    topic: Topic! @relationship(type: "EXEMPLIFIES", direction: IN)
     verified: Boolean!
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
     deleted: Boolean!

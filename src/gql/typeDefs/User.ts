@@ -1,5 +1,4 @@
 import { gql } from "apollo-server";
-/* eslint-disable */
 export default gql`
   type Mutation {
     Login(email: String!, password: String!): UserLogin!
@@ -27,11 +26,13 @@ export default gql`
     password: String!
       @auth(
         rules: [
-          { operations: [READ], where: { id: "$jwt.id" } },
+          { roles: ["admin"] }
+          { roles: ["owner"] }
+          { allow: { id: "$jwt.id" } }
         ]
       )
     email: String! @unique
-    roles: [String!]!
+    roles: [String!]! @auth(rules: [{ roles: ["admin"] }, { roles: ["owner"] }])
     createdDocuments: [Document!]!
       @relationship(type: "CREATED_BY", direction: OUT)
   }

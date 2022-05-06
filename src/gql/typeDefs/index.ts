@@ -10,5 +10,6 @@ import Document from "./Document";
 import User from "./User";
 import Topic from "./Topic";
 import Org from "./Org";
+import Category from "./Category";
 
-export default [User, Document, Topic, Org];
+export default [User, Document, Topic, Org, Category];

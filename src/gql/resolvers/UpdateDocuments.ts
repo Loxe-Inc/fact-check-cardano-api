@@ -3,18 +3,18 @@ import { ForbiddenError } from "apollo-server";
 import { DateTime, Driver } from "neo4j-driver";
 import * as yup from "yup";
 
-interface DocumentInput {
+interface DocumentUpdateInput {
   title: string;
   text: string;
   url: string;
   id: string;
 }
 
-interface DocumentInputs {
-  inputs: DocumentInput[];
+interface DocumentUpdateInputs {
+  inputs: DocumentUpdateInput[];
 }
 
-const DocumentInputsSchema = yup.object({
+const DocumentUpdateInputsSchema = yup.object({
   inputs: yup
     .array(
       yup
@@ -31,7 +31,7 @@ const DocumentInputsSchema = yup.object({
 
 export default async function UpdateDocuments(
   _s: undefined,
-  args: DocumentInputs,
+  args: DocumentUpdateInputs,
   context: Context
 ): Promise<
   {
@@ -51,7 +51,7 @@ export default async function UpdateDocuments(
       throw new ForbiddenError("Must be info creator to create documents");
     }
 
-    const { inputs } = await DocumentInputsSchema.validate(args);
+    const { inputs } = await DocumentUpdateInputsSchema.validate(args);
     const createDocumentCypher = `
         UNWIND $inputs AS input
         MATCH (d: Document {id: input.id})<-[:CREATED_BY]-(u:User {email: $sub})
