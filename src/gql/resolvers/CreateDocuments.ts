@@ -1,7 +1,7 @@
 import { Context } from "@neo4j/graphql/dist/types";
 import { DateTime, Driver } from "neo4j-driver";
 import * as yup from "yup";
-
+import { ForbiddenError } from "apollo-server";
 interface DocumentInput {
   title: string;
   text: string;
@@ -44,7 +44,13 @@ export default async function CreateDocuments(
 > {
   try {
     const { inputs } = await DocumentInputsSchema.validate(args);
-    console.log(context);
+    console.log("XXX:", context);
+    if (
+      !context.auth?.isAuthenticated ||
+      !context.auth.roles.includes("info_creator")
+    ) {
+      throw new ForbiddenError("Must be info creator to create documents");
+    }
     const createDocumentCypher = `
         UNWIND $inputs AS input
         OPTIONAL MATCH (t: Topic {name: input.topic})
