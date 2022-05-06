@@ -1,0 +1,1303 @@
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type CreateDocumentsMutationResponse {
+  info: CreateInfo!
+  documents: [Document!]!
+}
+
+type CreateInfo {
+  bookmark: String
+  nodesCreated: Int!
+  relationshipsCreated: Int!
+}
+
+type CreateOrgsMutationResponse {
+  info: CreateInfo!
+  orgs: [Org!]!
+}
+
+type CreateTokenSetsMutationResponse {
+  info: CreateInfo!
+  tokenSets: [TokenSet!]!
+}
+
+type CreateTopicsMutationResponse {
+  info: CreateInfo!
+  topics: [Topic!]!
+}
+
+type CreateUserLoginsMutationResponse {
+  info: CreateInfo!
+  userLogins: [UserLogin!]!
+}
+
+type CreateUsersMutationResponse {
+  info: CreateInfo!
+  users: [User!]!
+}
+
+"""A date and time, represented as an ISO-8601 string"""
+scalar DateTime
+
+type DateTimeAggregateSelectionNonNullable {
+  min: DateTime!
+  max: DateTime!
+}
+
+type DeleteInfo {
+  bookmark: String
+  nodesDeleted: Int!
+  relationshipsDeleted: Int!
+}
+
+type Document {
+  id: ID!
+  title: String!
+  text: String!
+  url: String!
+  verified: Boolean!
+  deleted: Boolean!
+  topic: Topic!
+  createdOn: DateTime!
+  updatedOn: DateTime!
+  createdBy(where: UserWhere, options: UserOptions, directed: Boolean = true): User!
+  createdByAggregate(where: UserWhere, directed: Boolean = true): DocumentUserCreatedByAggregationSelection
+  createdByConnection(where: DocumentCreatedByConnectionWhere, first: Int, after: String, directed: Boolean = true, sort: [DocumentCreatedByConnectionSort!]): DocumentCreatedByConnection!
+}
+
+type DocumentAggregateSelection {
+  count: Int!
+  id: IDAggregateSelectionNonNullable!
+  title: StringAggregateSelectionNonNullable!
+  text: StringAggregateSelectionNonNullable!
+  url: StringAggregateSelectionNonNullable!
+  createdOn: DateTimeAggregateSelectionNonNullable!
+  updatedOn: DateTimeAggregateSelectionNonNullable!
+}
+
+input DocumentConnectInput {
+  createdBy: DocumentCreatedByConnectFieldInput
+}
+
+input DocumentConnectOrCreateInput {
+  createdBy: DocumentCreatedByConnectOrCreateFieldInput
+}
+
+input DocumentConnectOrCreateWhere {
+  node: DocumentUniqueWhere!
+}
+
+input DocumentConnectWhere {
+  node: DocumentWhere!
+}
+
+input DocumentCreatedByAggregateInput {
+  count: Int
+  count_LT: Int
+  count_LTE: Int
+  count_GT: Int
+  count_GTE: Int
+  AND: [DocumentCreatedByAggregateInput!]
+  OR: [DocumentCreatedByAggregateInput!]
+  node: DocumentCreatedByNodeAggregationWhereInput
+}
+
+input DocumentCreatedByConnectFieldInput {
+  where: UserConnectWhere
+  connect: UserConnectInput
+}
+
+type DocumentCreatedByConnection {
+  edges: [DocumentCreatedByRelationship!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+input DocumentCreatedByConnectionSort {
+  node: UserSort
+}
+
+input DocumentCreatedByConnectionWhere {
+  AND: [DocumentCreatedByConnectionWhere!]
+  OR: [DocumentCreatedByConnectionWhere!]
+  node: UserWhere
+  node_NOT: UserWhere
+}
+
+input DocumentCreatedByConnectOrCreateFieldInput {
+  where: UserConnectOrCreateWhere!
+  onCreate: DocumentCreatedByConnectOrCreateFieldInputOnCreate!
+}
+
+input DocumentCreatedByConnectOrCreateFieldInputOnCreate {
+  node: UserOnCreateInput!
+}
+
+input DocumentCreatedByCreateFieldInput {
+  node: UserCreateInput!
+}
+
+input DocumentCreatedByDeleteFieldInput {
+  where: DocumentCreatedByConnectionWhere
+  delete: UserDeleteInput
+}
+
+input DocumentCreatedByDisconnectFieldInput {
+  where: DocumentCreatedByConnectionWhere
+  disconnect: UserDisconnectInput
+}
+
+input DocumentCreatedByFieldInput {
+  create: DocumentCreatedByCreateFieldInput
+  connect: DocumentCreatedByConnectFieldInput
+  connectOrCreate: DocumentCreatedByConnectOrCreateFieldInput
+}
+
+input DocumentCreatedByNodeAggregationWhereInput {
+  AND: [DocumentCreatedByNodeAggregationWhereInput!]
+  OR: [DocumentCreatedByNodeAggregationWhereInput!]
+  id_EQUAL: ID
+  name_EQUAL: String
+  name_AVERAGE_EQUAL: Float
+  name_LONGEST_EQUAL: Int
+  name_SHORTEST_EQUAL: Int
+  name_GT: Int
+  name_AVERAGE_GT: Float
+  name_LONGEST_GT: Int
+  name_SHORTEST_GT: Int
+  name_GTE: Int
+  name_AVERAGE_GTE: Float
+  name_LONGEST_GTE: Int
+  name_SHORTEST_GTE: Int
+  name_LT: Int
+  name_AVERAGE_LT: Float
+  name_LONGEST_LT: Int
+  name_SHORTEST_LT: Int
+  name_LTE: Int
+  name_AVERAGE_LTE: Float
+  name_LONGEST_LTE: Int
+  name_SHORTEST_LTE: Int
+  password_EQUAL: String
+  password_AVERAGE_EQUAL: Float
+  password_LONGEST_EQUAL: Int
+  password_SHORTEST_EQUAL: Int
+  password_GT: Int
+  password_AVERAGE_GT: Float
+  password_LONGEST_GT: Int
+  password_SHORTEST_GT: Int
+  password_GTE: Int
+  password_AVERAGE_GTE: Float
+  password_LONGEST_GTE: Int
+  password_SHORTEST_GTE: Int
+  password_LT: Int
+  password_AVERAGE_LT: Float
+  password_LONGEST_LT: Int
+  password_SHORTEST_LT: Int
+  password_LTE: Int
+  password_AVERAGE_LTE: Float
+  password_LONGEST_LTE: Int
+  password_SHORTEST_LTE: Int
+  email_EQUAL: String
+  email_AVERAGE_EQUAL: Float
+  email_LONGEST_EQUAL: Int
+  email_SHORTEST_EQUAL: Int
+  email_GT: Int
+  email_AVERAGE_GT: Float
+  email_LONGEST_GT: Int
+  email_SHORTEST_GT: Int
+  email_GTE: Int
+  email_AVERAGE_GTE: Float
+  email_LONGEST_GTE: Int
+  email_SHORTEST_GTE: Int
+  email_LT: Int
+  email_AVERAGE_LT: Float
+  email_LONGEST_LT: Int
+  email_SHORTEST_LT: Int
+  email_LTE: Int
+  email_AVERAGE_LTE: Float
+  email_LONGEST_LTE: Int
+  email_SHORTEST_LTE: Int
+}
+
+type DocumentCreatedByRelationship {
+  cursor: String!
+  node: User!
+}
+
+input DocumentCreatedByUpdateConnectionInput {
+  node: UserUpdateInput
+}
+
+input DocumentCreatedByUpdateFieldInput {
+  where: DocumentCreatedByConnectionWhere
+  update: DocumentCreatedByUpdateConnectionInput
+  connect: DocumentCreatedByConnectFieldInput
+  disconnect: DocumentCreatedByDisconnectFieldInput
+  create: DocumentCreatedByCreateFieldInput
+  delete: DocumentCreatedByDeleteFieldInput
+  connectOrCreate: DocumentCreatedByConnectOrCreateFieldInput
+}
+
+input DocumentCreateInput {
+  title: String!
+  text: String!
+  url: String!
+  verified: Boolean!
+  deleted: Boolean!
+  createdOn: DateTime!
+  updatedOn: DateTime!
+  createdBy: DocumentCreatedByFieldInput
+}
+
+input DocumentDeleteInput {
+  createdBy: DocumentCreatedByDeleteFieldInput
+}
+
+input DocumentDisconnectInput {
+  createdBy: DocumentCreatedByDisconnectFieldInput
+}
+
+type DocumentEdge {
+  cursor: String!
+  node: Document!
+}
+
+input DocumentInput {
+  title: String!
+  text: String!
+  url: String!
+  topic: String
+  id: String
+}
+
+input DocumentOnCreateInput {
+  title: String!
+  text: String!
+  url: String!
+  verified: Boolean!
+  deleted: Boolean!
+  createdOn: DateTime!
+  updatedOn: DateTime!
+}
+
+input DocumentOptions {
+  """
+  Specify one or more DocumentSort objects to sort Documents by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [DocumentSort!]
+  limit: Int
+  offset: Int
+}
+
+input DocumentRelationInput {
+  createdBy: DocumentCreatedByCreateFieldInput
+}
+
+type DocumentsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [DocumentEdge!]!
+}
+
+"""
+Fields to sort Documents by. The order in which sorts are applied is not guaranteed when specifying many fields in one DocumentSort object.
+"""
+input DocumentSort {
+  id: SortDirection
+  title: SortDirection
+  text: SortDirection
+  url: SortDirection
+  verified: SortDirection
+  deleted: SortDirection
+  createdOn: SortDirection
+  updatedOn: SortDirection
+}
+
+input DocumentUniqueWhere {
+  id: ID
+}
+
+input DocumentUpdateInput {
+  title: String
+  text: String
+  url: String
+  verified: Boolean
+  deleted: Boolean
+  createdOn: DateTime
+  updatedOn: DateTime
+  createdBy: DocumentCreatedByUpdateFieldInput
+}
+
+type DocumentUserCreatedByAggregationSelection {
+  count: Int!
+  node: DocumentUserCreatedByNodeAggregateSelection
+}
+
+type DocumentUserCreatedByNodeAggregateSelection {
+  id: IDAggregateSelectionNonNullable!
+  name: StringAggregateSelectionNonNullable!
+  password: StringAggregateSelectionNonNullable!
+  email: StringAggregateSelectionNonNullable!
+}
+
+input DocumentWhere {
+  OR: [DocumentWhere!]
+  AND: [DocumentWhere!]
+  id: ID
+  id_NOT: ID
+  id_IN: [ID!]
+  id_NOT_IN: [ID!]
+  id_CONTAINS: ID
+  id_NOT_CONTAINS: ID
+  id_STARTS_WITH: ID
+  id_NOT_STARTS_WITH: ID
+  id_ENDS_WITH: ID
+  id_NOT_ENDS_WITH: ID
+  title: String
+  title_NOT: String
+  title_IN: [String!]
+  title_NOT_IN: [String!]
+  title_CONTAINS: String
+  title_NOT_CONTAINS: String
+  title_STARTS_WITH: String
+  title_NOT_STARTS_WITH: String
+  title_ENDS_WITH: String
+  title_NOT_ENDS_WITH: String
+  text: String
+  text_NOT: String
+  text_IN: [String!]
+  text_NOT_IN: [String!]
+  text_CONTAINS: String
+  text_NOT_CONTAINS: String
+  text_STARTS_WITH: String
+  text_NOT_STARTS_WITH: String
+  text_ENDS_WITH: String
+  text_NOT_ENDS_WITH: String
+  url: String
+  url_NOT: String
+  url_IN: [String!]
+  url_NOT_IN: [String!]
+  url_CONTAINS: String
+  url_NOT_CONTAINS: String
+  url_STARTS_WITH: String
+  url_NOT_STARTS_WITH: String
+  url_ENDS_WITH: String
+  url_NOT_ENDS_WITH: String
+  verified: Boolean
+  verified_NOT: Boolean
+  deleted: Boolean
+  deleted_NOT: Boolean
+  createdOn: DateTime
+  createdOn_NOT: DateTime
+  createdOn_IN: [DateTime!]
+  createdOn_NOT_IN: [DateTime!]
+  createdOn_LT: DateTime
+  createdOn_LTE: DateTime
+  createdOn_GT: DateTime
+  createdOn_GTE: DateTime
+  updatedOn: DateTime
+  updatedOn_NOT: DateTime
+  updatedOn_IN: [DateTime!]
+  updatedOn_NOT_IN: [DateTime!]
+  updatedOn_LT: DateTime
+  updatedOn_LTE: DateTime
+  updatedOn_GT: DateTime
+  updatedOn_GTE: DateTime
+  createdBy: UserWhere
+  createdBy_NOT: UserWhere
+  createdByAggregate: DocumentCreatedByAggregateInput
+  createdByConnection: DocumentCreatedByConnectionWhere
+  createdByConnection_NOT: DocumentCreatedByConnectionWhere
+}
+
+type IDAggregateSelectionNonNullable {
+  shortest: ID!
+  longest: ID!
+}
+
+type Mutation {
+  Login(email: String!, password: String!): UserLogin!
+  CreateUser(email: String!, password: String!, name: String!): UserLogin!
+  RefreshToken(refresh_token: String!): UserLogin!
+  CreateDocuments(inputs: [DocumentInput!]!): [Document!]!
+  UpdateDocuments(inputs: [DocumentInput!]!): [Document!]!
+  createTokenSets(input: [TokenSetCreateInput!]!): CreateTokenSetsMutationResponse!
+  deleteTokenSets(where: TokenSetWhere): DeleteInfo!
+  updateTokenSets(where: TokenSetWhere, update: TokenSetUpdateInput): UpdateTokenSetsMutationResponse!
+  createUserLogins(input: [UserLoginCreateInput!]!): CreateUserLoginsMutationResponse!
+  deleteUserLogins(where: UserLoginWhere): DeleteInfo!
+  updateUserLogins(where: UserLoginWhere, update: UserLoginUpdateInput): UpdateUserLoginsMutationResponse!
+  createUsers(input: [UserCreateInput!]!): CreateUsersMutationResponse!
+  deleteUsers(where: UserWhere, delete: UserDeleteInput): DeleteInfo!
+  updateUsers(where: UserWhere, update: UserUpdateInput, connect: UserConnectInput, disconnect: UserDisconnectInput, create: UserRelationInput, delete: UserDeleteInput, connectOrCreate: UserConnectOrCreateInput): UpdateUsersMutationResponse!
+  createDocuments(input: [DocumentCreateInput!]!): CreateDocumentsMutationResponse!
+  deleteDocuments(where: DocumentWhere, delete: DocumentDeleteInput): DeleteInfo!
+  updateDocuments(where: DocumentWhere, update: DocumentUpdateInput, connect: DocumentConnectInput, disconnect: DocumentDisconnectInput, create: DocumentRelationInput, delete: DocumentDeleteInput, connectOrCreate: DocumentConnectOrCreateInput): UpdateDocumentsMutationResponse!
+  createTopics(input: [TopicCreateInput!]!): CreateTopicsMutationResponse!
+  deleteTopics(where: TopicWhere): DeleteInfo!
+  updateTopics(where: TopicWhere, update: TopicUpdateInput): UpdateTopicsMutationResponse!
+  createOrgs(input: [OrgCreateInput!]!): CreateOrgsMutationResponse!
+  deleteOrgs(where: OrgWhere): DeleteInfo!
+  updateOrgs(where: OrgWhere, update: OrgUpdateInput): UpdateOrgsMutationResponse!
+}
+
+type Org {
+  id: ID!
+  name: String!
+  emailEndings: [String!]!
+}
+
+type OrgAggregateSelection {
+  count: Int!
+  id: IDAggregateSelectionNonNullable!
+  name: StringAggregateSelectionNonNullable!
+}
+
+input OrgCreateInput {
+  name: String!
+  emailEndings: [String!]!
+}
+
+type OrgEdge {
+  cursor: String!
+  node: Org!
+}
+
+input OrgOptions {
+  """
+  Specify one or more OrgSort objects to sort Orgs by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [OrgSort!]
+  limit: Int
+  offset: Int
+}
+
+type OrgsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrgEdge!]!
+}
+
+"""
+Fields to sort Orgs by. The order in which sorts are applied is not guaranteed when specifying many fields in one OrgSort object.
+"""
+input OrgSort {
+  id: SortDirection
+  name: SortDirection
+}
+
+input OrgUpdateInput {
+  name: String
+  emailEndings: [String!]
+}
+
+input OrgWhere {
+  OR: [OrgWhere!]
+  AND: [OrgWhere!]
+  id: ID
+  id_NOT: ID
+  id_IN: [ID!]
+  id_NOT_IN: [ID!]
+  id_CONTAINS: ID
+  id_NOT_CONTAINS: ID
+  id_STARTS_WITH: ID
+  id_NOT_STARTS_WITH: ID
+  id_ENDS_WITH: ID
+  id_NOT_ENDS_WITH: ID
+  name: String
+  name_NOT: String
+  name_IN: [String!]
+  name_NOT_IN: [String!]
+  name_CONTAINS: String
+  name_NOT_CONTAINS: String
+  name_STARTS_WITH: String
+  name_NOT_STARTS_WITH: String
+  name_ENDS_WITH: String
+  name_NOT_ENDS_WITH: String
+  emailEndings: [String!]
+  emailEndings_NOT: [String!]
+  emailEndings_INCLUDES: String
+  emailEndings_NOT_INCLUDES: String
+}
+
+"""Pagination information (Relay)"""
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  tokenSets(where: TokenSetWhere, options: TokenSetOptions): [TokenSet!]!
+  tokenSetsAggregate(where: TokenSetWhere): TokenSetAggregateSelection!
+  tokenSetsConnection(first: Int, after: String, where: TokenSetWhere, sort: [TokenSetSort]): TokenSetsConnection!
+  userLogins(where: UserLoginWhere, options: UserLoginOptions): [UserLogin!]!
+  userLoginsAggregate(where: UserLoginWhere): UserLoginAggregateSelection!
+  userLoginsConnection(first: Int, after: String, where: UserLoginWhere, sort: [UserLoginSort]): UserLoginsConnection!
+  users(where: UserWhere, options: UserOptions): [User!]!
+  usersAggregate(where: UserWhere): UserAggregateSelection!
+  usersConnection(first: Int, after: String, where: UserWhere, sort: [UserSort]): UsersConnection!
+  documents(where: DocumentWhere, options: DocumentOptions): [Document!]!
+  documentsAggregate(where: DocumentWhere): DocumentAggregateSelection!
+  documentsConnection(first: Int, after: String, where: DocumentWhere, sort: [DocumentSort]): DocumentsConnection!
+  topics(where: TopicWhere, options: TopicOptions): [Topic!]!
+  topicsAggregate(where: TopicWhere): TopicAggregateSelection!
+  topicsConnection(first: Int, after: String, where: TopicWhere, sort: [TopicSort]): TopicsConnection!
+  orgs(where: OrgWhere, options: OrgOptions): [Org!]!
+  orgsAggregate(where: OrgWhere): OrgAggregateSelection!
+  orgsConnection(first: Int, after: String, where: OrgWhere, sort: [OrgSort]): OrgsConnection!
+}
+
+enum SortDirection {
+  """Sort by field values in ascending order."""
+  ASC
+
+  """Sort by field values in descending order."""
+  DESC
+}
+
+type StringAggregateSelectionNonNullable {
+  shortest: String!
+  longest: String!
+}
+
+type StringAggregateSelectionNullable {
+  shortest: String
+  longest: String
+}
+
+type TokenSet {
+  access_token: String!
+  refresh_token: String!
+  access_token_exp: String!
+  refresh_token_exp: String!
+}
+
+type TokenSetAggregateSelection {
+  count: Int!
+  access_token: StringAggregateSelectionNonNullable!
+  refresh_token: StringAggregateSelectionNonNullable!
+  access_token_exp: StringAggregateSelectionNonNullable!
+  refresh_token_exp: StringAggregateSelectionNonNullable!
+}
+
+input TokenSetCreateInput {
+  access_token: String!
+  refresh_token: String!
+  access_token_exp: String!
+  refresh_token_exp: String!
+}
+
+type TokenSetEdge {
+  cursor: String!
+  node: TokenSet!
+}
+
+input TokenSetOptions {
+  """
+  Specify one or more TokenSetSort objects to sort TokenSets by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [TokenSetSort!]
+  limit: Int
+  offset: Int
+}
+
+type TokenSetsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [TokenSetEdge!]!
+}
+
+"""
+Fields to sort TokenSets by. The order in which sorts are applied is not guaranteed when specifying many fields in one TokenSetSort object.
+"""
+input TokenSetSort {
+  access_token: SortDirection
+  refresh_token: SortDirection
+  access_token_exp: SortDirection
+  refresh_token_exp: SortDirection
+}
+
+input TokenSetUpdateInput {
+  access_token: String
+  refresh_token: String
+  access_token_exp: String
+  refresh_token_exp: String
+}
+
+input TokenSetWhere {
+  OR: [TokenSetWhere!]
+  AND: [TokenSetWhere!]
+  access_token: String
+  access_token_NOT: String
+  access_token_IN: [String!]
+  access_token_NOT_IN: [String!]
+  access_token_CONTAINS: String
+  access_token_NOT_CONTAINS: String
+  access_token_STARTS_WITH: String
+  access_token_NOT_STARTS_WITH: String
+  access_token_ENDS_WITH: String
+  access_token_NOT_ENDS_WITH: String
+  refresh_token: String
+  refresh_token_NOT: String
+  refresh_token_IN: [String!]
+  refresh_token_NOT_IN: [String!]
+  refresh_token_CONTAINS: String
+  refresh_token_NOT_CONTAINS: String
+  refresh_token_STARTS_WITH: String
+  refresh_token_NOT_STARTS_WITH: String
+  refresh_token_ENDS_WITH: String
+  refresh_token_NOT_ENDS_WITH: String
+  access_token_exp: String
+  access_token_exp_NOT: String
+  access_token_exp_IN: [String!]
+  access_token_exp_NOT_IN: [String!]
+  access_token_exp_CONTAINS: String
+  access_token_exp_NOT_CONTAINS: String
+  access_token_exp_STARTS_WITH: String
+  access_token_exp_NOT_STARTS_WITH: String
+  access_token_exp_ENDS_WITH: String
+  access_token_exp_NOT_ENDS_WITH: String
+  refresh_token_exp: String
+  refresh_token_exp_NOT: String
+  refresh_token_exp_IN: [String!]
+  refresh_token_exp_NOT_IN: [String!]
+  refresh_token_exp_CONTAINS: String
+  refresh_token_exp_NOT_CONTAINS: String
+  refresh_token_exp_STARTS_WITH: String
+  refresh_token_exp_NOT_STARTS_WITH: String
+  refresh_token_exp_ENDS_WITH: String
+  refresh_token_exp_NOT_ENDS_WITH: String
+}
+
+type Topic {
+  id: ID!
+  name: String!
+  category: String
+  subCategory: String
+}
+
+type TopicAggregateSelection {
+  count: Int!
+  id: IDAggregateSelectionNonNullable!
+  name: StringAggregateSelectionNonNullable!
+  category: StringAggregateSelectionNullable!
+  subCategory: StringAggregateSelectionNullable!
+}
+
+input TopicCreateInput {
+  name: String!
+  category: String
+  subCategory: String
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
+input TopicOptions {
+  """
+  Specify one or more TopicSort objects to sort Topics by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [TopicSort!]
+  limit: Int
+  offset: Int
+}
+
+type TopicsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [TopicEdge!]!
+}
+
+"""
+Fields to sort Topics by. The order in which sorts are applied is not guaranteed when specifying many fields in one TopicSort object.
+"""
+input TopicSort {
+  id: SortDirection
+  name: SortDirection
+  category: SortDirection
+  subCategory: SortDirection
+}
+
+input TopicUpdateInput {
+  name: String
+  category: String
+  subCategory: String
+}
+
+input TopicWhere {
+  OR: [TopicWhere!]
+  AND: [TopicWhere!]
+  id: ID
+  id_NOT: ID
+  id_IN: [ID!]
+  id_NOT_IN: [ID!]
+  id_CONTAINS: ID
+  id_NOT_CONTAINS: ID
+  id_STARTS_WITH: ID
+  id_NOT_STARTS_WITH: ID
+  id_ENDS_WITH: ID
+  id_NOT_ENDS_WITH: ID
+  name: String
+  name_NOT: String
+  name_IN: [String!]
+  name_NOT_IN: [String!]
+  name_CONTAINS: String
+  name_NOT_CONTAINS: String
+  name_STARTS_WITH: String
+  name_NOT_STARTS_WITH: String
+  name_ENDS_WITH: String
+  name_NOT_ENDS_WITH: String
+  category: String
+  category_NOT: String
+  category_IN: [String]
+  category_NOT_IN: [String]
+  category_CONTAINS: String
+  category_NOT_CONTAINS: String
+  category_STARTS_WITH: String
+  category_NOT_STARTS_WITH: String
+  category_ENDS_WITH: String
+  category_NOT_ENDS_WITH: String
+  subCategory: String
+  subCategory_NOT: String
+  subCategory_IN: [String]
+  subCategory_NOT_IN: [String]
+  subCategory_CONTAINS: String
+  subCategory_NOT_CONTAINS: String
+  subCategory_STARTS_WITH: String
+  subCategory_NOT_STARTS_WITH: String
+  subCategory_ENDS_WITH: String
+  subCategory_NOT_ENDS_WITH: String
+}
+
+type UpdateDocumentsMutationResponse {
+  info: UpdateInfo!
+  documents: [Document!]!
+}
+
+type UpdateInfo {
+  bookmark: String
+  nodesCreated: Int!
+  nodesDeleted: Int!
+  relationshipsCreated: Int!
+  relationshipsDeleted: Int!
+}
+
+type UpdateOrgsMutationResponse {
+  info: UpdateInfo!
+  orgs: [Org!]!
+}
+
+type UpdateTokenSetsMutationResponse {
+  info: UpdateInfo!
+  tokenSets: [TokenSet!]!
+}
+
+type UpdateTopicsMutationResponse {
+  info: UpdateInfo!
+  topics: [Topic!]!
+}
+
+type UpdateUserLoginsMutationResponse {
+  info: UpdateInfo!
+  userLogins: [UserLogin!]!
+}
+
+type UpdateUsersMutationResponse {
+  info: UpdateInfo!
+  users: [User!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  password: String!
+  email: String!
+  roles: [String!]!
+  createdDocuments(where: DocumentWhere, options: DocumentOptions, directed: Boolean = true): [Document!]!
+  createdDocumentsAggregate(where: DocumentWhere, directed: Boolean = true): UserDocumentCreatedDocumentsAggregationSelection
+  createdDocumentsConnection(where: UserCreatedDocumentsConnectionWhere, first: Int, after: String, directed: Boolean = true, sort: [UserCreatedDocumentsConnectionSort!]): UserCreatedDocumentsConnection!
+}
+
+type UserAggregateSelection {
+  count: Int!
+  id: IDAggregateSelectionNonNullable!
+  name: StringAggregateSelectionNonNullable!
+  password: StringAggregateSelectionNonNullable!
+  email: StringAggregateSelectionNonNullable!
+}
+
+input UserConnectInput {
+  createdDocuments: [UserCreatedDocumentsConnectFieldInput!]
+}
+
+input UserConnectOrCreateInput {
+  createdDocuments: [UserCreatedDocumentsConnectOrCreateFieldInput!]
+}
+
+input UserConnectOrCreateWhere {
+  node: UserUniqueWhere!
+}
+
+input UserConnectWhere {
+  node: UserWhere!
+}
+
+input UserCreatedDocumentsAggregateInput {
+  count: Int
+  count_LT: Int
+  count_LTE: Int
+  count_GT: Int
+  count_GTE: Int
+  AND: [UserCreatedDocumentsAggregateInput!]
+  OR: [UserCreatedDocumentsAggregateInput!]
+  node: UserCreatedDocumentsNodeAggregationWhereInput
+}
+
+input UserCreatedDocumentsConnectFieldInput {
+  where: DocumentConnectWhere
+  connect: [DocumentConnectInput!]
+}
+
+type UserCreatedDocumentsConnection {
+  edges: [UserCreatedDocumentsRelationship!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+input UserCreatedDocumentsConnectionSort {
+  node: DocumentSort
+}
+
+input UserCreatedDocumentsConnectionWhere {
+  AND: [UserCreatedDocumentsConnectionWhere!]
+  OR: [UserCreatedDocumentsConnectionWhere!]
+  node: DocumentWhere
+  node_NOT: DocumentWhere
+}
+
+input UserCreatedDocumentsConnectOrCreateFieldInput {
+  where: DocumentConnectOrCreateWhere!
+  onCreate: UserCreatedDocumentsConnectOrCreateFieldInputOnCreate!
+}
+
+input UserCreatedDocumentsConnectOrCreateFieldInputOnCreate {
+  node: DocumentOnCreateInput!
+}
+
+input UserCreatedDocumentsCreateFieldInput {
+  node: DocumentCreateInput!
+}
+
+input UserCreatedDocumentsDeleteFieldInput {
+  where: UserCreatedDocumentsConnectionWhere
+  delete: DocumentDeleteInput
+}
+
+input UserCreatedDocumentsDisconnectFieldInput {
+  where: UserCreatedDocumentsConnectionWhere
+  disconnect: DocumentDisconnectInput
+}
+
+input UserCreatedDocumentsFieldInput {
+  create: [UserCreatedDocumentsCreateFieldInput!]
+  connect: [UserCreatedDocumentsConnectFieldInput!]
+  connectOrCreate: [UserCreatedDocumentsConnectOrCreateFieldInput!]
+}
+
+input UserCreatedDocumentsNodeAggregationWhereInput {
+  AND: [UserCreatedDocumentsNodeAggregationWhereInput!]
+  OR: [UserCreatedDocumentsNodeAggregationWhereInput!]
+  id_EQUAL: ID
+  title_EQUAL: String
+  title_AVERAGE_EQUAL: Float
+  title_LONGEST_EQUAL: Int
+  title_SHORTEST_EQUAL: Int
+  title_GT: Int
+  title_AVERAGE_GT: Float
+  title_LONGEST_GT: Int
+  title_SHORTEST_GT: Int
+  title_GTE: Int
+  title_AVERAGE_GTE: Float
+  title_LONGEST_GTE: Int
+  title_SHORTEST_GTE: Int
+  title_LT: Int
+  title_AVERAGE_LT: Float
+  title_LONGEST_LT: Int
+  title_SHORTEST_LT: Int
+  title_LTE: Int
+  title_AVERAGE_LTE: Float
+  title_LONGEST_LTE: Int
+  title_SHORTEST_LTE: Int
+  text_EQUAL: String
+  text_AVERAGE_EQUAL: Float
+  text_LONGEST_EQUAL: Int
+  text_SHORTEST_EQUAL: Int
+  text_GT: Int
+  text_AVERAGE_GT: Float
+  text_LONGEST_GT: Int
+  text_SHORTEST_GT: Int
+  text_GTE: Int
+  text_AVERAGE_GTE: Float
+  text_LONGEST_GTE: Int
+  text_SHORTEST_GTE: Int
+  text_LT: Int
+  text_AVERAGE_LT: Float
+  text_LONGEST_LT: Int
+  text_SHORTEST_LT: Int
+  text_LTE: Int
+  text_AVERAGE_LTE: Float
+  text_LONGEST_LTE: Int
+  text_SHORTEST_LTE: Int
+  url_EQUAL: String
+  url_AVERAGE_EQUAL: Float
+  url_LONGEST_EQUAL: Int
+  url_SHORTEST_EQUAL: Int
+  url_GT: Int
+  url_AVERAGE_GT: Float
+  url_LONGEST_GT: Int
+  url_SHORTEST_GT: Int
+  url_GTE: Int
+  url_AVERAGE_GTE: Float
+  url_LONGEST_GTE: Int
+  url_SHORTEST_GTE: Int
+  url_LT: Int
+  url_AVERAGE_LT: Float
+  url_LONGEST_LT: Int
+  url_SHORTEST_LT: Int
+  url_LTE: Int
+  url_AVERAGE_LTE: Float
+  url_LONGEST_LTE: Int
+  url_SHORTEST_LTE: Int
+  createdOn_EQUAL: DateTime
+  createdOn_MIN_EQUAL: DateTime
+  createdOn_MAX_EQUAL: DateTime
+  createdOn_GT: DateTime
+  createdOn_MIN_GT: DateTime
+  createdOn_MAX_GT: DateTime
+  createdOn_GTE: DateTime
+  createdOn_MIN_GTE: DateTime
+  createdOn_MAX_GTE: DateTime
+  createdOn_LT: DateTime
+  createdOn_MIN_LT: DateTime
+  createdOn_MAX_LT: DateTime
+  createdOn_LTE: DateTime
+  createdOn_MIN_LTE: DateTime
+  createdOn_MAX_LTE: DateTime
+  updatedOn_EQUAL: DateTime
+  updatedOn_MIN_EQUAL: DateTime
+  updatedOn_MAX_EQUAL: DateTime
+  updatedOn_GT: DateTime
+  updatedOn_MIN_GT: DateTime
+  updatedOn_MAX_GT: DateTime
+  updatedOn_GTE: DateTime
+  updatedOn_MIN_GTE: DateTime
+  updatedOn_MAX_GTE: DateTime
+  updatedOn_LT: DateTime
+  updatedOn_MIN_LT: DateTime
+  updatedOn_MAX_LT: DateTime
+  updatedOn_LTE: DateTime
+  updatedOn_MIN_LTE: DateTime
+  updatedOn_MAX_LTE: DateTime
+}
+
+type UserCreatedDocumentsRelationship {
+  cursor: String!
+  node: Document!
+}
+
+input UserCreatedDocumentsUpdateConnectionInput {
+  node: DocumentUpdateInput
+}
+
+input UserCreatedDocumentsUpdateFieldInput {
+  where: UserCreatedDocumentsConnectionWhere
+  update: UserCreatedDocumentsUpdateConnectionInput
+  connect: [UserCreatedDocumentsConnectFieldInput!]
+  disconnect: [UserCreatedDocumentsDisconnectFieldInput!]
+  create: [UserCreatedDocumentsCreateFieldInput!]
+  delete: [UserCreatedDocumentsDeleteFieldInput!]
+  connectOrCreate: [UserCreatedDocumentsConnectOrCreateFieldInput!]
+}
+
+input UserCreateInput {
+  name: String!
+  password: String!
+  email: String!
+  roles: [String!]!
+  createdDocuments: UserCreatedDocumentsFieldInput
+}
+
+input UserDeleteInput {
+  createdDocuments: [UserCreatedDocumentsDeleteFieldInput!]
+}
+
+input UserDisconnectInput {
+  createdDocuments: [UserCreatedDocumentsDisconnectFieldInput!]
+}
+
+type UserDocumentCreatedDocumentsAggregationSelection {
+  count: Int!
+  node: UserDocumentCreatedDocumentsNodeAggregateSelection
+}
+
+type UserDocumentCreatedDocumentsNodeAggregateSelection {
+  id: IDAggregateSelectionNonNullable!
+  title: StringAggregateSelectionNonNullable!
+  text: StringAggregateSelectionNonNullable!
+  url: StringAggregateSelectionNonNullable!
+  createdOn: DateTimeAggregateSelectionNonNullable!
+  updatedOn: DateTimeAggregateSelectionNonNullable!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserLogin {
+  id: String!
+  email: String!
+  roles: [String!]!
+  name: String!
+  tokenSet: TokenSet!
+}
+
+type UserLoginAggregateSelection {
+  count: Int!
+  id: StringAggregateSelectionNonNullable!
+  email: StringAggregateSelectionNonNullable!
+  name: StringAggregateSelectionNonNullable!
+}
+
+input UserLoginCreateInput {
+  id: String!
+  email: String!
+  roles: [String!]!
+  name: String!
+}
+
+type UserLoginEdge {
+  cursor: String!
+  node: UserLogin!
+}
+
+input UserLoginOptions {
+  """
+  Specify one or more UserLoginSort objects to sort UserLogins by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [UserLoginSort!]
+  limit: Int
+  offset: Int
+}
+
+type UserLoginsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [UserLoginEdge!]!
+}
+
+"""
+Fields to sort UserLogins by. The order in which sorts are applied is not guaranteed when specifying many fields in one UserLoginSort object.
+"""
+input UserLoginSort {
+  id: SortDirection
+  email: SortDirection
+  name: SortDirection
+}
+
+input UserLoginUpdateInput {
+  id: String
+  email: String
+  roles: [String!]
+  name: String
+}
+
+input UserLoginWhere {
+  OR: [UserLoginWhere!]
+  AND: [UserLoginWhere!]
+  id: String
+  id_NOT: String
+  id_IN: [String!]
+  id_NOT_IN: [String!]
+  id_CONTAINS: String
+  id_NOT_CONTAINS: String
+  id_STARTS_WITH: String
+  id_NOT_STARTS_WITH: String
+  id_ENDS_WITH: String
+  id_NOT_ENDS_WITH: String
+  email: String
+  email_NOT: String
+  email_IN: [String!]
+  email_NOT_IN: [String!]
+  email_CONTAINS: String
+  email_NOT_CONTAINS: String
+  email_STARTS_WITH: String
+  email_NOT_STARTS_WITH: String
+  email_ENDS_WITH: String
+  email_NOT_ENDS_WITH: String
+  roles: [String!]
+  roles_NOT: [String!]
+  roles_INCLUDES: String
+  roles_NOT_INCLUDES: String
+  name: String
+  name_NOT: String
+  name_IN: [String!]
+  name_NOT_IN: [String!]
+  name_CONTAINS: String
+  name_NOT_CONTAINS: String
+  name_STARTS_WITH: String
+  name_NOT_STARTS_WITH: String
+  name_ENDS_WITH: String
+  name_NOT_ENDS_WITH: String
+}
+
+input UserOnCreateInput {
+  name: String!
+  password: String!
+  email: String!
+  roles: [String!]!
+}
+
+input UserOptions {
+  """
+  Specify one or more UserSort objects to sort Users by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [UserSort!]
+  limit: Int
+  offset: Int
+}
+
+input UserRelationInput {
+  createdDocuments: [UserCreatedDocumentsCreateFieldInput!]
+}
+
+type UsersConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [UserEdge!]!
+}
+
+"""
+Fields to sort Users by. The order in which sorts are applied is not guaranteed when specifying many fields in one UserSort object.
+"""
+input UserSort {
+  id: SortDirection
+  name: SortDirection
+  password: SortDirection
+  email: SortDirection
+}
+
+input UserUniqueWhere {
+  id: ID
+  email: String
+}
+
+input UserUpdateInput {
+  name: String
+  password: String
+  email: String
+  roles: [String!]
+  createdDocuments: [UserCreatedDocumentsUpdateFieldInput!]
+}
+
+input UserWhere {
+  OR: [UserWhere!]
+  AND: [UserWhere!]
+  id: ID
+  id_NOT: ID
+  id_IN: [ID!]
+  id_NOT_IN: [ID!]
+  id_CONTAINS: ID
+  id_NOT_CONTAINS: ID
+  id_STARTS_WITH: ID
+  id_NOT_STARTS_WITH: ID
+  id_ENDS_WITH: ID
+  id_NOT_ENDS_WITH: ID
+  name: String
+  name_NOT: String
+  name_IN: [String!]
+  name_NOT_IN: [String!]
+  name_CONTAINS: String
+  name_NOT_CONTAINS: String
+  name_STARTS_WITH: String
+  name_NOT_STARTS_WITH: String
+  name_ENDS_WITH: String
+  name_NOT_ENDS_WITH: String
+  password: String
+  password_NOT: String
+  password_IN: [String!]
+  password_NOT_IN: [String!]
+  password_CONTAINS: String
+  password_NOT_CONTAINS: String
+  password_STARTS_WITH: String
+  password_NOT_STARTS_WITH: String
+  password_ENDS_WITH: String
+  password_NOT_ENDS_WITH: String
+  email: String
+  email_NOT: String
+  email_IN: [String!]
+  email_NOT_IN: [String!]
+  email_CONTAINS: String
+  email_NOT_CONTAINS: String
+  email_STARTS_WITH: String
+  email_NOT_STARTS_WITH: String
+  email_ENDS_WITH: String
+  email_NOT_ENDS_WITH: String
+  roles: [String!]
+  roles_NOT: [String!]
+  roles_INCLUDES: String
+  roles_NOT_INCLUDES: String
+  createdDocumentsAggregate: UserCreatedDocumentsAggregateInput
+
+  """Return Users where all of the related Documents match this filter"""
+  createdDocuments_ALL: DocumentWhere
+
+  """Return Users where none of the related Documents match this filter"""
+  createdDocuments_NONE: DocumentWhere
+
+  """Return Users where one of the related Documents match this filter"""
+  createdDocuments_SINGLE: DocumentWhere
+
+  """Return Users where some of the related Documents match this filter"""
+  createdDocuments_SOME: DocumentWhere
+  createdDocumentsConnection_ALL: UserCreatedDocumentsConnectionWhere
+  createdDocumentsConnection_NONE: UserCreatedDocumentsConnectionWhere
+  createdDocumentsConnection_SINGLE: UserCreatedDocumentsConnectionWhere
+  createdDocumentsConnection_SOME: UserCreatedDocumentsConnectionWhere
+}

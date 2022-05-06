@@ -44,7 +44,6 @@ export default async function CreateDocuments(
 > {
   try {
     const { inputs } = await DocumentInputsSchema.validate(args);
-    console.log("XXX:", context);
     if (
       !context.auth?.isAuthenticated ||
       !context.auth.roles.includes("info_creator")
@@ -53,17 +52,21 @@ export default async function CreateDocuments(
     }
     const createDocumentCypher = `
         UNWIND $inputs AS input
-        OPTIONAL MATCH (t: Topic {name: input.topic})
-        WITH t, input CALL apoc.do.when(
-          t IS NULL, 'CREATE (nt: Topic {name: topic, id: apoc.create.uuid()})<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE}) RETURN d AS node', 
-          'CREATE (t)<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE}) RETURN d AS node',
-          {topic: input.topic, title: input.title, text: input.text, url: input.url, t:t}
+        OPTIONAL MATCH (t:Topic {name: input.topic})
+        MATCH (u:User {email: $sub})
+        WITH t, input, u CALL apoc.do.when(
+          t IS NULL, 'CREATE (nt: Topic {name: topic, id: apoc.create.uuid()})<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE})<-[:CREATED_BY]-(u) RETURN d AS node', 
+          'CREATE (t)<-[:EXEMPLIFIES]-(d: Document {title: title, text: text, url: url, id: apoc.create.uuid(), createdOn: DateTime(), updateOn: DateTime(), verified: FALSE, deleted: FALSE})<-[:CREATED_BY]-(u) RETURN d AS node',
+          {topic: input.topic, title: input.title, text: input.text, url: input.url, t: t, u: u}
         ) YIELD value 
         RETURN value.node AS doc
       `;
     const { driver } = context;
     const session = driver.session();
-    const result = await session.run(createDocumentCypher, { inputs });
+    const result = await session.run(createDocumentCypher, {
+      inputs,
+      sub: context.auth.jwt?.sub,
+    });
     if (result?.records?.length) {
       const docsToReturn = result.records
         .map((doc) => {

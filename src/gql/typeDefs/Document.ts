@@ -5,7 +5,7 @@ export default gql`
     title: String!
     text: String!
     url: String!
-    topic: String!
+    topic: String
     id: String
   }
 
@@ -17,11 +17,17 @@ export default gql`
   type Document
     @auth(
       rules: [
-        { operations: [READ], roles: ["info_reader"] }
+        {
+          operations: [READ]
+          roles: ["info_reader"]
+          where: {
+            OR: [{ createdBy: { email: "$jwt.sub" } }, { verified: true }]
+          }
+        }
         {
           operations: [CREATE, UPDATE]
           roles: ["info_creator"]
-          bind: { creator: { id: "$jwt.sub" } }
+          where: { createdBy: { email: "$jwt.sub" } }
         }
         { operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }
       ]
@@ -37,5 +43,6 @@ export default gql`
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
     createdOn: DateTime!
     updatedOn: DateTime!
+    createdBy: User! @relationship(type: "CREATED_BY", direction: IN)
   }
 `;

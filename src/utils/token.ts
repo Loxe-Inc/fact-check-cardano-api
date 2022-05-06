@@ -43,11 +43,12 @@ export const generateJWTFromRT = async (
 };
 
 export function generateJWT(userProperties: UserProperties): JWTSet {
-  const { email, roles } = userProperties;
+  const { email, roles, id } = userProperties;
   const now = DateTime.utc();
   try {
     const access_token = jwt.sign(
       {
+        id: id,
         sub: email,
         "https://loxeinc.com/claims": { "https://loxeinc.com/roles": roles },
       },
