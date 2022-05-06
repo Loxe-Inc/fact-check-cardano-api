@@ -35,5 +35,6 @@ export default gql`
     roles: [String!]! @auth(rules: [{ roles: ["admin"] }, { roles: ["owner"] }])
     createdDocuments: [Document!]!
       @relationship(type: "CREATED_BY", direction: OUT)
+    organization: String! @relationship(type: "BELONGS_TO", direction: OUT)
   }
 `;

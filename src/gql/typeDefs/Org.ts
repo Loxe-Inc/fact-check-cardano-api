@@ -6,5 +6,6 @@ export default gql`
     id: ID! @id
     name: String!
     emailEndings: [String!]!
+    users: [String!] @relationship(type: "BELONGS_TO", direction: IN)
   }
 `;
