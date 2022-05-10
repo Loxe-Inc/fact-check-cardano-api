@@ -2,12 +2,14 @@ import CreateOrg from "./CreateOrg";
 import { driver, auth } from "neo4j-driver";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import fetch from "cross-fetch";
-
+import { DateTime } from "luxon";
 import * as dotenv from "dotenv";
 import CreateUser from "./CreateUser";
 import LoginUser from "./LoginUser";
 import UpdateUserAsInfoCreator from "./UpdateUserAsInfoCreator";
 import CreateCategory from "./CreateCategory";
+import CreateTopic from "./CreateTopic";
+import CreateDocument from "./CreateDocument";
 dotenv.config();
 
 const {
@@ -56,6 +58,25 @@ const neoDriver = driver(
         createdBy: id,
         name: "blockchain",
         topics: [],
+      },
+    ]);
+    const topicIds = await CreateTopic(client, access_token, [
+      {
+        createdBy: id,
+        name: "topicOne",
+        category: [],
+        documents: [],
+      },
+    ]);
+    const docsIds = await CreateDocument(client, access_token, [
+      {
+        createdBy: id,
+        title: "First Document",
+        text: "First document text",
+        url: "https://FirstDoc.com",
+        topic: [],
+        createdOn: DateTime.now(),
+        updatedOn: DateTime.now(),
       },
     ]);
   } catch (err) {
