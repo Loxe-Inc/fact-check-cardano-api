@@ -1,5 +1,5 @@
 import { Context } from "@neo4j/graphql/dist/types";
-import { DateTime, Driver } from "neo4j-driver";
+import { DateTime } from "neo4j-driver";
 import * as yup from "yup";
 import { ForbiddenError } from "apollo-server";
 interface DocumentCreateInput {

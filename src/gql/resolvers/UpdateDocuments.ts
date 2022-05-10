@@ -1,6 +1,6 @@
 import { Context } from "@neo4j/graphql/dist/types";
 import { ForbiddenError } from "apollo-server";
-import { DateTime, Driver } from "neo4j-driver";
+import { DateTime } from "neo4j-driver";
 import * as yup from "yup";
 
 interface DocumentUpdateInput {
