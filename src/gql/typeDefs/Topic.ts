@@ -6,7 +6,7 @@ export default gql`
       rules: [
         { roles: ["admin"] }
         { roles: ["owner"] }
-        { operations: [CREATE], roles: ["info_creator"] }
+        { operations: [CREATE, CONNECT], roles: ["info_creator"] }
         {
           operations: [UPDATE]
           roles: ["info_creator"]

@@ -23,19 +23,15 @@ export default gql`
   type Document
     @auth(
       rules: [
+        { roles: ["admin"] }
+        { roles: ["owner"] }
+        { operations: [READ], roles: ["info_reader"] }
+        { operations: [CREATE, CONNECT], roles: ["info_creator"] }
         {
-          operations: [READ]
-          roles: ["info_reader"]
-          where: {
-            OR: [{ createdBy: { email: "$jwt.sub" } }, { verified: true }]
-          }
-        }
-        {
-          operations: [CREATE, UPDATE]
+          operations: [UPDATE]
           roles: ["info_creator"]
-          where: { createdBy: { email: "$jwt.sub" } }
+          allow: { createdBy: "$jwt.id" }
         }
-        { operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }
       ]
     ) {
     id: ID! @id
