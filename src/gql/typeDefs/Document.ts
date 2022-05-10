@@ -30,7 +30,7 @@ export default gql`
         {
           operations: [UPDATE]
           roles: ["info_creator"]
-          allow: { createdBy: "$jwt.id" }
+          allow: { createdBy: { id: "$jwt.id" } }
         }
       ]
     ) {

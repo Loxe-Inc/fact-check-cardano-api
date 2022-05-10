@@ -63,7 +63,7 @@ export default async function Login(
           o IS NOT NULL,
           'CREATE (org)<-[:MEMBER_OF]-(u:User {email:email, password:password, roles:roles, name:name, id:apoc.create.uuid()}) RETURN u as node',
           'CREATE (u:User {email:email, password:password, roles:roles, name:$name, id:apoc.create.uuid()}) RETURN u as node',
-          {email:$email, password:$password, roles:$roles, name:$name, o:o}
+          {email:$email, password:$password, roles:$roles, name:$name, org:o}
         ) YIELD value
         RETURN value.node AS user
       `;
