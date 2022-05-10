@@ -39,11 +39,17 @@ For production use, use `npm run start:prod`
 
 - Category
   - mutations:
-    - createCategory
+    - createCategory - see seed/dev
 - Topic
 - Document
 - Org
 - User
+  - mutations:
+    - CreateUser - see seed/dev
+    - Login - see seed/dev
+  - queries
+    - users
+      - id, name, password (only logged in self)
 
 ## License
 
