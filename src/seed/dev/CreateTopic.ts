@@ -16,7 +16,7 @@ export default async function CreateTopic(
   input: {
     createdBy: string;
     name: string;
-    category: string[];
+    category: string;
     documents: string[];
   }[]
 ): Promise<string[]> {
@@ -26,5 +26,5 @@ export default async function CreateTopic(
     variables: { input },
   });
   console.log(data);
-  return data.createTopics.topics.map((c: { id: string }) => c.id);
+  return data.createTopics.topics.map((t: { id: string }) => t.id);
 }

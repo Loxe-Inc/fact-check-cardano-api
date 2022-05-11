@@ -60,25 +60,27 @@ const neoDriver = driver(
         topics: [],
       },
     ]);
+    console.log(catIds);
     const topicIds = await CreateTopic(client, access_token, [
       {
         createdBy: id,
         name: "topicOne",
-        category: [],
+        category: catIds[0],
         documents: [],
       },
     ]);
-    const docsIds = await CreateDocument(client, access_token, [
-      {
-        createdBy: id,
-        title: "First Document",
-        text: "First document text",
-        url: "https://FirstDoc.com",
-        topic: [],
-        createdOn: DateTime.now(),
-        updatedOn: DateTime.now(),
-      },
-    ]);
+    console.log(topicIds);
+    // const docsIds = await CreateDocument(client, access_token, [
+    //   {
+    //     createdBy: id,
+    //     title: "First Document",
+    //     text: "First document text",
+    //     url: "url example",
+    //     topic: [],
+    //     createdOn: DateTime.now(),
+    //     updatedOn: DateTime.now(),
+    //   },
+    // ]);
   } catch (err) {
     console.error(err);
   }
