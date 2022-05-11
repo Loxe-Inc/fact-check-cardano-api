@@ -6,6 +6,8 @@ A fact checking API for Cardano where a user can see verified documents and fact
 
 Using the power of the Neo4j Graph Database, we draw relationships between users and their documents, as well as documents and topics. The fundamental nature of graph databases allows us to find paths between documents across different topics.
 
+![Graph Sample](./graph.png)
+
 ## Tech
 
 This API was built with:
@@ -39,16 +41,18 @@ For production use, use `npm run start:prod`
 
 - Category
   - mutations:
-    - createCategory - see seed/dev
+    - createCategory - see seed/dev (only authorized users, info_creator role)
 - Topic
   - mutations:
-    - createTopic - see seed/dev
+    - createTopic - see seed/dev (only authorized users, info_creator role)
 - Document
   - mutations:
-    - createDocument - see seed/dev
+    - createDocument - see seed/dev (only authorized users, info_creator role)
+  - queries:
+    - documents
 - Org
   - mutations:
-    - createOrg - see seed/dev
+    - createOrg - see seed/dev (only authorized users, admin role)
 - User
   - mutations:
     - CreateUser - see seed/dev
