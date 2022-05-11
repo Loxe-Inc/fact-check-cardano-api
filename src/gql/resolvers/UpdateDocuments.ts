@@ -15,7 +15,7 @@ interface DocumentUpdateInputs {
 }
 
 const DocumentUpdateInputsSchema = yup.object({
-  inputs: yup
+  input: yup
     .array(
       yup
         .object({
@@ -51,9 +51,9 @@ export default async function UpdateDocuments(
       throw new ForbiddenError("Must be info creator to create documents");
     }
 
-    const { inputs } = await DocumentUpdateInputsSchema.validate(args);
+    const { input } = await DocumentUpdateInputsSchema.validate(args);
     const createDocumentCypher = `
-        UNWIND $inputs AS input
+        UNWIND $input AS input
         MATCH (d: Document {id: input.id})<-[:CREATED_BY]-(u:User {email: $sub})
         SET d.updatedOn = DateTime(), d.title = input.title, d.text = input.text, d.url = input.url
         RETURN d AS doc
@@ -62,7 +62,7 @@ export default async function UpdateDocuments(
     const { driver } = context;
     const session = driver.session();
     const result = await session.run(createDocumentCypher, {
-      inputs,
+      input,
       sub: context.auth.jwt?.sub,
     });
     if (result?.records?.length) {

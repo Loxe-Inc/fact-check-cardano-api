@@ -17,8 +17,8 @@ export default gql`
   }
 
   type Mutation {
-    CreateDocuments(inputs: [DocumentCreateInputM!]!): [Document!]!
-    UpdateDocuments(inputs: [DocumentUpdateInputM!]!): [Document!]!
+    CreateDocuments(input: [DocumentCreateInputM!]!): [Document!]!
+    UpdateDocuments(input: [DocumentUpdateInputM!]!): [Document!]!
   }
 
   type Document

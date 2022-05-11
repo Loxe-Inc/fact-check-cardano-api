@@ -70,17 +70,14 @@ const neoDriver = driver(
       },
     ]);
     console.log(topicIds);
-    // const docsIds = await CreateDocument(client, access_token, [
-    //   {
-    //     createdBy: id,
-    //     title: "First Document",
-    //     text: "First document text",
-    //     url: "url example",
-    //     topic: [],
-    //     createdOn: DateTime.now(),
-    //     updatedOn: DateTime.now(),
-    //   },
-    // ]);
+    const docsIds = await CreateDocument(client, access_token, [
+      {
+        title: "First Document",
+        text: "First document text",
+        url: "https://hello.com",
+        topics: ["topicOne"],
+      },
+    ]);
   } catch (err) {
     console.error(err);
   }

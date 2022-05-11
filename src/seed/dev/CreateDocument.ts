@@ -2,11 +2,9 @@ import { gql, ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { DateTime } from "luxon";
 
 const CREATE_DOCUMENT = gql`
-  mutation CreateDocument($input: [DocumentCreateInput!]!) {
-    createDocuments(input: $input) {
-      documents {
-        id
-      }
+  mutation CreateDocument($input: [DocumentCreateInputM!]!) {
+    CreateDocuments(input: $input) {
+      id
     }
   }
 `;
@@ -15,13 +13,10 @@ export default async function CreateDocument(
   client: ApolloClient<NormalizedCacheObject>,
   access_token: string,
   input: {
-    createdBy: string;
     title: string;
     text: string;
-    topic: string[];
+    topics: string[];
     url: string;
-    createdOn: DateTime;
-    updatedOn: DateTime;
   }[]
 ): Promise<string[]> {
   console.log(access_token);
@@ -30,5 +25,5 @@ export default async function CreateDocument(
     variables: { input },
   });
   console.log(data);
-  return data.createDocuments.documents.map((c: { id: string }) => c.id);
+  return data.CreateDocuments.map((c: { id: string }) => c.id);
 }
