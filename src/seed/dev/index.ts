@@ -65,7 +65,7 @@ const neoDriver = driver(
       {
         createdBy: id,
         name: "topicOne",
-        category: catIds[0],
+        category: { connect: { where: { node: { id: catIds[0] } } } },
         documents: [],
       },
     ]);

@@ -1,14 +1,15 @@
 import { gql } from "apollo-server";
+import { DateTime } from "luxon";
 
 export default gql`
-  input DocumentCreateInput {
+  input DocumentCreateInputM {
     title: String!
     text: String!
     url: String!
-    topic: [String!]!
+    topics: [String!]!
   }
 
-  input DocumentUpdateInput {
+  input DocumentUpdateInputM {
     title: String!
     text: String!
     url: String!
@@ -16,8 +17,8 @@ export default gql`
   }
 
   type Mutation {
-    CreateDocuments(inputs: [DocumentCreateInput!]!): [Document!]!
-    UpdateDocuments(inputs: [DocumentUpdateInput!]!): [Document!]!
+    CreateDocuments(inputs: [DocumentCreateInputM!]!): [Document!]!
+    UpdateDocuments(inputs: [DocumentUpdateInputM!]!): [Document!]!
   }
 
   type Document
@@ -38,13 +39,15 @@ export default gql`
     title: String!
     text: String!
     url: String!
-    topic: Topic! @relationship(type: "EXEMPLIFIES", direction: IN)
+    topics: [Topic!]! @relationship(type: "EXEMPLIFIES", direction: IN)
     verified: Boolean!
+      @default(value: false)
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
     deleted: Boolean!
+      @default(value: false)
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
-    createdOn: DateTime!
-    updatedOn: DateTime!
+    createdOn: DateTime! @default(value: 0)
+    updatedOn: DateTime! @default(value: 0)
     createdBy: User! @relationship(type: "CREATED_BY", direction: IN)
   }
 `;

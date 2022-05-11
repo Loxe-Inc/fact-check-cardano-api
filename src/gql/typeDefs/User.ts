@@ -20,7 +20,7 @@ export default gql`
     name: String!
   }
 
-  type User {
+  type User @auth(rules: [{ operations: [CONNECT], roles: ["info_creator"] }]) {
     id: ID! @id
     name: String!
     password: String!

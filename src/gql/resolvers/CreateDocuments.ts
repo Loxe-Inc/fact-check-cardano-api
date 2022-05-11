@@ -58,8 +58,9 @@ export default async function CreateDocuments(
         ON CREATE SET d.id=apoc.create.uuid()
         WITH d,input UNWIND input.topics as topic
         WITH d,topic 
-        MERGE (nt: Topic {name: topic})-[:EXEMPLIFIES]->(d) 
+        MERGE (nt: Topic {name: topic})
         ON CREATE SET nt.id=apoc.create.uuid()
+        MERGE (nt)-[:EXEMPLIFIES]->(d) 
         RETURN d
       `;
     const { driver } = context;

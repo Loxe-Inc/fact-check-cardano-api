@@ -16,7 +16,8 @@ export default async function CreateTopic(
   input: {
     createdBy: string;
     name: string;
-    category: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    category: any;
     documents: string[];
   }[]
 ): Promise<string[]> {
