@@ -4,3 +4,4 @@ COPY *.js *.json /fact-check/
 WORKDIR /fact-check
 RUN npm i
 COPY src /fact-check/src
+CMD ["npm", "run", "start:prod"]
