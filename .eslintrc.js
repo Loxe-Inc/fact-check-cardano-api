@@ -1,13 +1,13 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
     ecmaVersion: 12,
-    sourceType: "module"
+    sourceType: "module",
   },
   rules: {},
   globals: {
@@ -19,10 +19,10 @@ module.exports = {
     shallowWithRouter: true,
     context: true,
     expect: true,
-    jsdom: true
+    jsdom: true,
   },
   extends: [
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ]
+    "plugin:prettier/recommended",
+  ],
 };

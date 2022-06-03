@@ -4,7 +4,7 @@ import { ApolloServer } from "apollo-server";
 import { resolvers } from "gql/resolvers";
 import typeDefs from "gql/typeDefs";
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
-import { ApolloServerPluginSchemaReporting } from "apollo-server-core";
+import { ApolloServerPluginSchemaReporting, ApolloServerPluginLandingPageGraphQLPlayground, PluginDefinition } from "apollo-server-core";
 const { RSA_KEY_B64 } = process.env;
 const neoDriver = driver(
   process.env.NEO4J_URI || "",
@@ -23,6 +23,7 @@ const neoSchema = new Neo4jGraphQL({
       rolesPath: "https://loxeinc\\.com/claims.https://loxeinc\\.com/roles",
       noVerify: false,
     }),
+
   },
   config: {
     enableDebug: true,
@@ -32,6 +33,10 @@ const neoSchema = new Neo4jGraphQL({
 (async function main() {
   const schema = await neoSchema.getSchema();
   await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
+  const plugins: PluginDefinition[] = [ApolloServerPluginSchemaReporting()]
+  if (process.env.NODE_ENV === "development") {
+    plugins.push(ApolloServerPluginLandingPageGraphQLPlayground());
+  }
   const server = new ApolloServer({
     schema,
     context: ({ req }) => ({ req }),
@@ -39,7 +44,7 @@ const neoSchema = new Neo4jGraphQL({
     apollo: {
       graphRef: "fact-check-api@current",
     },
-    plugins: [ApolloServerPluginSchemaReporting()],
+    plugins,
   });
 
   await server.listen(4000);

@@ -14,7 +14,7 @@ interface DocumentCreateInputs {
 }
 
 const DocumentCreateInputsSchema = yup.object({
-  input: yup
+  inputs: yup
     .array(
       yup
         .object({
@@ -43,17 +43,17 @@ export default async function CreateDocuments(
   }[]
 > {
   try {
-    const { input } = await DocumentCreateInputsSchema.validate(args);
+    const { inputs } = await DocumentCreateInputsSchema.validate(args);
     if (
       !context.auth?.isAuthenticated ||
       !context.auth.roles.includes("info_creator")
     ) {
-      throw new ForbiddenError("Must be info creator to create documents");
+      throw new ForbiddenError("Must be info_creator to create documents");
     }
     const createDocumentCypher = `
         MATCH (u:User {email: $sub})
         WITH u, datetime() as dt
-        UNWIND $input AS input
+        UNWIND $inputs AS input
         MERGE (d: Document {title: input.title, text: input.text, url: input.url, createdOn: dt, updateOn: dt, verified: FALSE, deleted: FALSE})<-[:CREATED_BY]-(u)
         ON CREATE SET d.id=apoc.create.uuid()
         WITH d,input UNWIND input.topics as topic
@@ -66,7 +66,7 @@ export default async function CreateDocuments(
     const { driver } = context;
     const session = driver.session();
     const result = await session.run(createDocumentCypher, {
-      input,
+      inputs,
       sub: context.auth.jwt?.sub,
     });
     if (result?.records?.length) {
