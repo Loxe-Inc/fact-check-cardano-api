@@ -9,6 +9,7 @@ import CreateUser from "./CreateUser";
 import RefreshToken from "./RefreshToken";
 import CreateDocuments from "./CreateDocuments";
 import UpdateDocuments from "./UpdateDocuments";
+import ChangeRole from "./ChangeRole";
 
 export const resolvers = {
   Mutation: {
@@ -17,5 +18,6 @@ export const resolvers = {
     RefreshToken,
     CreateDocuments,
     UpdateDocuments,
+    ChangeRole,
   },
 };

@@ -14,7 +14,7 @@
   "scripts": {
     "start": "wait-port neo4j:7687 && env-cmd -e development,common nodemon -r tsconfig-paths/register src/index.ts",
     "start:prod": "env-cmd -e production,common ts-node -r tsconfig-paths/register src/index.ts",
-    "seed:dev": "env-cmd -e development,common ts-node -r tsconfig-paths/register src/seed/dev/index.ts"
+    "seed:dev": "env-cmd -e development,common ts-node -r tsconfig-paths/register seed/dev/index.ts"
   },
   "author": "Loxe Inc.",
   "license": "UNLICENSED",

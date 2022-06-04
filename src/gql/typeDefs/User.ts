@@ -1,9 +1,19 @@
 import { gql } from "apollo-server";
 export default gql`
+  type ChangeRoleResponse {
+    id: ID!
+    email: String!
+    roles: [String!]!
+  }
+  input ChangeRoleInput {
+    email: String!
+    role: String!
+  }
   type Mutation {
     Login(email: String!, password: String!): UserLogin!
     CreateUser(email: String!, password: String!, name: String!): UserLogin!
     RefreshToken(refresh_token: String!): UserLogin!
+    ChangeRole(inputs: [ChangeRoleInput!]!): [ChangeRoleResponse!]!
   }
   type TokenSet {
     access_token: String!
