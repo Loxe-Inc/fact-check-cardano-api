@@ -4,7 +4,11 @@ import { ApolloServer } from "apollo-server";
 import { resolvers } from "gql/resolvers";
 import typeDefs from "gql/typeDefs";
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
-import { ApolloServerPluginSchemaReporting, ApolloServerPluginLandingPageGraphQLPlayground, PluginDefinition } from "apollo-server-core";
+import {
+  ApolloServerPluginSchemaReporting,
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  PluginDefinition,
+} from "apollo-server-core";
 const { RSA_KEY_B64 } = process.env;
 const neoDriver = driver(
   process.env.NEO4J_URI || "",
@@ -20,10 +24,9 @@ const neoSchema = new Neo4jGraphQL({
       secret: RSA_KEY_B64
         ? Buffer.from(RSA_KEY_B64, "base64").toString("ascii")
         : "super-secret",
-      rolesPath: "https://loxeinc\\.com/claims.https://loxeinc\\.com/roles",
+      rolesPath: "roles",
       noVerify: false,
     }),
-
   },
   config: {
     enableDebug: true,
@@ -33,7 +36,7 @@ const neoSchema = new Neo4jGraphQL({
 (async function main() {
   const schema = await neoSchema.getSchema();
   await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
-  const plugins: PluginDefinition[] = [ApolloServerPluginSchemaReporting()]
+  const plugins: PluginDefinition[] = [ApolloServerPluginSchemaReporting()];
   if (process.env.NODE_ENV === "development") {
     plugins.push(ApolloServerPluginLandingPageGraphQLPlayground());
   }

@@ -50,7 +50,7 @@ export function generateJWT(userProperties: UserProperties): JWTSet {
       {
         id: id,
         sub: email,
-        "https://loxeinc.com/claims": { "https://loxeinc.com/roles": roles },
+        roles,
       },
       DECODED_PRV,
       {
