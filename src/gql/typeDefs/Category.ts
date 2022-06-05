@@ -10,13 +10,31 @@ export default gql`
         {
           operations: [UPDATE]
           roles: ["info_creator"]
-          allow: { createdBy: "$jwt.id" }
+          allow: { createdBy: { id: "$jwt.id" } }
         }
       ]
     ) {
-    createdBy: String!
     id: ID! @id
-    name: String! @unique
-    topics: [Topic!]! @relationship(type: "CATEGORIZES", direction: OUT)
+    name: String!
+    createdBy: User! @relationship(type: "CAT_CREATED_BY", direction: IN)
+    topics: [Topic!]! @relationship(type: "CATEGORIZES", direction: IN)
+  }
+
+  input CategoryCreateInputM {
+    name: String!
+  }
+
+  type Mutation {
+    CreateCategory(inputs: [CategoryCreateInputM!]!): [Category!]!
+      @cypher(
+        statement: """
+        MATCH (u:User {id: $auth.jwt.id})
+        UNWIND $inputs AS input
+        MERGE (c: Category {name: input.name})<-[:CAT_CREATED_BY]-(u)
+        ON CREATE SET c+={id:apoc.create.uuid()}
+        RETURN c
+        """
+      )
+      @auth(rules: [{ roles: ["info_creator"] }])
   }
 `;

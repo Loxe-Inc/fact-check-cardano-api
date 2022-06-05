@@ -21,10 +21,14 @@ export const generateJWTFromRT = async (
   }) as { email: string };
   if ("email" in payload) {
     const session = driver.session();
-    const cypher = `MATCH (u:User {email:$email}) RETURN u`;
+    const cypher = `
+    MATCH (u:User {email:$email})
+    OPTIONAL MATCH (o:Org)<-[:MEMBER_OF]-(u)
+    RETURN u,o`;
     const result = await session.run(cypher, { email: payload.email });
     if (result.records?.length) {
       const user = result.records[0].get("u");
+      const org = result.records[0].get("o")?.properties;
       const userProperties = user.properties as UserProperties;
       if (userProperties.roles.includes("info_reader")) {
         const tokenSet = generateJWT(userProperties);
@@ -35,6 +39,7 @@ export const generateJWTFromRT = async (
           email,
           id,
           roles,
+          org: org?.id as string,
         } as LoginState;
       }
     }

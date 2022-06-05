@@ -19,6 +19,7 @@ export interface LoginState {
   tokenSet: JWTSet;
   roles: string[];
   name: string;
+  org?: string;
 }
 
 export class UserNotFoundError extends Error {

@@ -5,7 +5,7 @@ export default gql`
   input DocumentCreateInputM {
     title: String!
     text: String!
-    url: String!
+    url: String
     topics: [String!]!
   }
 
@@ -17,8 +17,38 @@ export default gql`
   }
 
   type Mutation {
-    CreateDocuments(input: [DocumentCreateInputM!]!): [Document!]!
-    UpdateDocuments(input: [DocumentUpdateInputM!]!): [Document!]!
+    CreateDocuments(inputs: [DocumentCreateInputM!]!): [Document!]!
+      @cypher(
+        statement: """
+        MATCH (u:User {id: $auth.jwt.id})
+        UNWIND $inputs AS input
+        MERGE (d: Document {title: input.title})<-[:CREATED_BY]-(u)
+        ON CREATE SET d+={id:apoc.create.uuid(), createdOn:datetime(), updatedOn:datetime(), text: input.text, url: input.url, verified: FALSE, deleted: FALSE}
+        WITH d,input UNWIND input.topics as topic
+        WITH d,topic MERGE (nt: Topic {name: topic})
+        ON CREATE SET nt.id=apoc.create.uuid()
+        WITH d,nt MERGE (nt)<-[:EXEMPLIFIES]-(d)
+        RETURN d
+        """
+      )
+    UpdateDocuments(inputs: [DocumentUpdateInputM!]!): [Document!]!
+      @cypher(
+        statement: """
+        UNWIND $inputs AS input
+        MATCH (d: Document {id: input.id})<-[:CREATED_BY]-(u:User {id: $auth.jwt.id})
+        SET d += {title:$title, text:$text, url:$url, updatedOn:datetime()}
+        RETURN d
+        """
+      )
+    VerifyDocuments(inputs: [ID!]!): [Document!]!
+      @cypher(
+        statement: """
+        UNWIND $inputs AS input
+        MATCH (d: Document {id: input})-[:EXEMPLIFIES]->(t:Topic)-[:MANAGED_BY]->(o:Org)<-[:MEMBER_OF]-(u:User {id: $auth.jwt.id})
+
+        RETURN d
+        """
+      )
   }
 
   type Document
@@ -26,7 +56,7 @@ export default gql`
       rules: [
         { roles: ["admin"] }
         { roles: ["owner"] }
-        { operations: [READ], roles: ["info_reader"] }
+        { operations: [READ], allowUnauthenticated: true }
         { operations: [CREATE, CONNECT], roles: ["info_creator"] }
         {
           operations: [UPDATE]
@@ -36,18 +66,18 @@ export default gql`
       ]
     ) {
     id: ID! @id
-    title: String!
+    title: String! @unique
     text: String!
-    url: String!
-    topics: [Topic!]! @relationship(type: "EXEMPLIFIES", direction: IN)
+    url: String @unique
+    topics: [Topic!]! @relationship(type: "EXEMPLIFIES", direction: OUT)
     verified: Boolean!
       @default(value: false)
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
     deleted: Boolean!
       @default(value: false)
       @auth(rules: [{ operations: [CREATE, UPDATE, DELETE], roles: ["admin"] }])
-    createdOn: DateTime! @default(value: 0)
-    updatedOn: DateTime! @default(value: 0)
+    createdOn: DateTime!
+    updatedOn: DateTime!
     createdBy: User! @relationship(type: "CREATED_BY", direction: IN)
   }
 `;

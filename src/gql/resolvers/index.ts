@@ -7,8 +7,6 @@
 import Login from "./Login";
 import CreateUser from "./CreateUser";
 import RefreshToken from "./RefreshToken";
-import CreateDocuments from "./CreateDocuments";
-import UpdateDocuments from "./UpdateDocuments";
 import ChangeRole from "./ChangeRole";
 
 export const resolvers = {
@@ -16,8 +14,6 @@ export const resolvers = {
     Login,
     CreateUser,
     RefreshToken,
-    CreateDocuments,
-    UpdateDocuments,
     ChangeRole,
   },
 };

@@ -63,19 +63,16 @@ export default async function Login(
         };
         return userResponse;
       }
-      throw new UserNotFoundError(
-        `toast:Username password combination does not exist`
-      );
-    } else {
-      // user doe not exist
-      throw new UserNotFoundError("toast:User not found");
     }
+    throw new UserNotFoundError(
+      "toast:Username password combination does not exist"
+    );
   } catch (err) {
     const errors: Record<string, string[]> = {};
     if (err instanceof yup.ValidationError) {
       for (const innerErr of err.inner) {
         const [key, message] = innerErr.message.split(":", 2);
-        if (key in errors) {
+        if (!(key in errors)) {
           errors[key] = [];
         }
         errors[key].push(message);
