@@ -44,9 +44,6 @@ const neoSchema = new Neo4jGraphQL({
     schema,
     context: ({ req }) => ({ req }),
     debug: true,
-    apollo: {
-      graphRef: "fact-check-api@current",
-    },
     plugins,
   });
 
