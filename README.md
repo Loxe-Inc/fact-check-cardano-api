@@ -31,7 +31,8 @@ And these variables set:
 - NEO4J_PASSWORD=password
 - NEO4J_URI=URI for neo4j instance
 - NEO4J_USER=neo4j
-
+- APOLLO_KEY=depends on you studio.apollographql.com
+- APOLLO_GRAPH_REF=depends on you studio.apollographql.com
 ## How to Use
 
 For development use, use `docker compose up`
